@@ -26,7 +26,7 @@ func main() {
 	router := gin.Default()
 
 	m := make(map[string]Details)
-
+  
 	router.GET("/GetAll", func(ctx *gin.Context) {
 		if len(m) == 0 {
 			ctx.JSON(http.StatusOK, gin.H{
