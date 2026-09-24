@@ -29,5 +29,24 @@ func main() {
 
 	})
 
+	router.POST("/uploadMultiple", func(ctx *gin.Context) {
+		// Multipart form
+		form, err := ctx.MultipartForm()
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		files := form.File["files"]
+
+		for _, file := range files {
+			log.Println(file.Filename)
+
+			// Upload the file to specific dst.
+			dst := filepath.Join("./files/", filepath.Base(file.Filename))
+			ctx.SaveUploadedFile(file, dst)
+		}
+		ctx.String(http.StatusOK, fmt.Sprintf("%d files uploaded!", len(files)))
+	})
+
 	router.Run()
 }

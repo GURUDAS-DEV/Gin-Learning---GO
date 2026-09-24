@@ -71,6 +71,8 @@
             overflow-wrap: anywhere;
         }
 
+        .file-name p { margin: 5px 0; }
+
         button {
             width: 100%;
             padding: 14px 18px;
@@ -89,14 +91,14 @@
 <body>
     <main class="panel">
         <p class="eyebrow">Document intake</p>
-        <h1>Approve a file</h1>
-        <p class="intro">Choose a file to send securely to the upload service for review.</p>
+        <h1>Approve files</h1>
+        <p class="intro">Choose multiple files to send securely to the upload service for review.</p>
 
-        <form id="upload-form" action="http://localhost:8080/upload" method="post" enctype="multipart/form-data">
+        <form id="upload-form" action="http://localhost:8080/uploadMultiple" method="post" enctype="multipart/form-data">
             <label class="drop-zone" id="drop-zone" for="file-input">
-                <strong>Choose a file</strong>
-                <span>Click here or drop it into this area</span>
-                <input id="file-input" name="file" type="file" required>
+            <strong>Choose files</strong>
+            <span>Click here or drop multiple files into this area</span>
+            <input id="file-input" name="files" type="file" multiple required>
             </label>
             <p class="file-name" id="file-name">No file selected</p>
             <button id="submit-button" type="submit" disabled>Send for approval</button>
@@ -112,13 +114,24 @@
         const submitButton = document.querySelector('#submit-button');
         const status = document.querySelector('#status');
 
-        function showFile(file) {
-            fileName.textContent = file ? `${file.name} (${Math.ceil(file.size / 1024)} KB)` : 'No file selected';
-            submitButton.disabled = !file;
+        function showFiles(files) {
+            fileName.replaceChildren();
+            submitButton.disabled = files.length === 0;
+
+            if (files.length === 0) {
+                fileName.textContent = 'No files selected';
+            } else {
+                Array.from(files).forEach((file) => {
+                    const item = document.createElement('p');
+                    item.textContent = `${file.name} (${Math.ceil(file.size / 1024)} KB)`;
+                    fileName.appendChild(item);
+                });
+            }
+
             status.textContent = '';
         }
 
-        input.addEventListener('change', () => showFile(input.files[0]));
+        input.addEventListener('change', () => showFiles(input.files));
 
         ['dragenter', 'dragover'].forEach((eventName) => {
             dropZone.addEventListener(eventName, (event) => {
@@ -136,13 +149,13 @@
 
         dropZone.addEventListener('drop', (event) => {
             input.files = event.dataTransfer.files;
-            showFile(input.files[0]);
+            showFiles(input.files);
         });
 
         form.addEventListener('submit', () => {
             submitButton.disabled = true;
             submitButton.textContent = 'Uploading...';
-            status.textContent = 'Sending your file for approval.';
+            status.textContent = `Sending ${input.files.length} files for approval.`;
         });
     </script>
 </body>
