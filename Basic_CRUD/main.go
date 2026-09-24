@@ -8,10 +8,10 @@ import (
 )
 
 type Details struct {
-	name   string
-	rollNo string
-	dept   string
-	cgpa   string
+	Name   string
+	RollNo string
+	Dept   string
+	Cgpa   string
 }
 
 type DetailsDTO struct {
@@ -26,7 +26,7 @@ func main() {
 	router := gin.Default()
 
 	m := make(map[string]Details)
-  
+
 	router.GET("/GetAll", func(ctx *gin.Context) {
 		if len(m) == 0 {
 			ctx.JSON(http.StatusOK, gin.H{
@@ -59,10 +59,10 @@ func main() {
 		}
 
 		value := Details{
-			name:   details.Name,
-			rollNo: details.RollNo,
-			dept:   details.Dept,
-			cgpa:   details.Cgpa,
+			Name:   details.Name,
+			RollNo: details.RollNo,
+			Dept:   details.Dept,
+			Cgpa:   details.Cgpa,
 		}
 		m[details.Id] = value
 
