@@ -104,6 +104,9 @@
             <button id="submit-button" type="submit" disabled>Send for approval</button>
             <p class="status" id="status" role="status"></p>
         </form>
+        <button id="gurudas" style="height: 80px; width: 80px; color: red; background-color: black;">
+            Go to 
+        </button>
     </main>
 
     <script>
@@ -157,6 +160,11 @@
             submitButton.textContent = 'Uploading...';
             status.textContent = `Sending ${input.files.length} files for approval.`;
         });
+
+        const redirect = document.getElementById("gurudas")
+        redirect.addEventListener("click", async()=>{
+            window.location.href = "http://localhost:8080/redirect";
+        })
     </script>
 </body>
 </html>
